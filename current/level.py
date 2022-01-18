@@ -9,6 +9,7 @@ class Level:
     def __init__(self, display, level_data):
         self.display_surface = display
         self.world_shift = -5
+        self.world_tiles_offset = 349
 
         terrain_layout = import_csv_layout(level_data['terrain'])
         self.terrain_sprites = self.create_sprite_group(terrain_layout, 'terrain')
@@ -19,7 +20,7 @@ class Level:
         for row_ind, row in enumerate(layout):
             for col_ind, val in enumerate(row):
                 if val != '-1':
-                    x = col_ind * tile_size
+                    x = col_ind * tile_size - self.world_tiles_offset * tile_size
                     y = row_ind * tile_size
 
                     if type == 'terrain':
