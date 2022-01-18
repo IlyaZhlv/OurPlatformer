@@ -1,37 +1,50 @@
 import pygame
+import pytmx
 
-from tiles import StaticTile
-from support import import_csv_layout, import_cut_graphics
+from player import Player
 from settings import *
 
 
 class Level:
-    def __init__(self, display, level_data):
+    def __init__(self, display):
         self.display_surface = display
-        self.world_shift = -5
-        self.world_tiles_offset = 349
+        self.world_shift = 0
+        self.world_tiles_offset = 349 * tile_size
 
-        terrain_layout = import_csv_layout(level_data['terrain'])
-        self.terrain_sprites = self.create_sprite_group(terrain_layout, 'terrain')
+        # terrain_layout = import_csv_layout(level_data['terrain'])
+        # self.terrain_sprites = self.create_sprite_group(terrain_layout, 'terrain')
 
-    def create_sprite_group(self, layout, type):
-        sprite_group = pygame.sprite.Group()
+        self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
+        self.player_sprite = self.create_player()
 
-        for row_ind, row in enumerate(layout):
-            for col_ind, val in enumerate(row):
-                if val != '-1':
-                    x = col_ind * tile_size - self.world_tiles_offset * tile_size
-                    y = row_ind * tile_size
+    def create_player(self):
+        sprite = pygame.sprite.GroupSingle()
 
-                    if type == 'terrain':
-                        terrain_list_surface = import_cut_graphics('../map/еорм дорожи.png')
-                        surface = terrain_list_surface[int(val)]
-                        sprite = StaticTile(tile_size, x, y, surface)
+        for layer in self.tmxdata.layers:
+            if layer.name == 'player':
+                for x, y, tile in layer.tiles():
+                    player = Player((x * tile_size - self.world_tiles_offset, y * tile_size), '../map/character/run/1.png')
+                    sprite.add(player)
+                    break
 
-                    sprite_group.add(sprite)
+        return sprite
 
-        return sprite_group
+    def scroll_x(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_d]:
+            self.world_tiles_offset += 8
+
+        elif keys[pygame.K_a]:
+            self.world_tiles_offset += -8
 
     def run(self):
-        self.terrain_sprites.update(self.world_shift)
-        self.terrain_sprites.draw(self.display_surface)
+        self.scroll_x()
+        for layer in self.tmxdata.visible_layers:
+            for x, y, tile in layer.tiles():
+                self.display_surface.blit(tile, (x * tile_size - self.world_tiles_offset, y * tile_size))
+
+        self.player_sprite.update()
+        self.player_sprite.draw(self.display_surface)
+        # self.terrain_sprites.update(self.world_shift)
+        # self.terrain_sprites.draw(self.display_surface)

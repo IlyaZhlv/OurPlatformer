@@ -2,12 +2,11 @@ import sys
 import pygame
 
 from level import Level
-from gamedata import level_0
 from settings import *
 
 pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
-level = Level(screen, level_0)
+level = Level(screen)
 clock = pygame.time.Clock()
 
 while True:
