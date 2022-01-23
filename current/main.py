@@ -12,10 +12,14 @@ clock = pygame.time.Clock()
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.init()
+            pygame.quit()
             sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if pygame.key.get_pressed()[pygame.K_ESCAPE]:
+                pygame.quit()
+                sys.exit()
 
-    screen.fill('black')
+    screen.fill((153, 217, 234))
     level.run()
     pygame.display.update()
     clock.tick(60)

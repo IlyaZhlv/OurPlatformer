@@ -24,6 +24,15 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE]:
             self.jump()
 
+    def vertical_collisions(self, new_y):
+        if self.y_direction > 0:
+            self.rect.bottom = new_y
+
+        elif self.y_direction < 0:
+            self.rect.top = new_y
+
+        self.y_direction = 0
+
     def update(self):
        self.get_input()
        self.apply_gravity()

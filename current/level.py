@@ -11,9 +11,6 @@ class Level:
         self.world_shift = 0
         self.world_tiles_offset = 349 * tile_size
 
-        # terrain_layout = import_csv_layout(level_data['terrain'])
-        # self.terrain_sprites = self.create_sprite_group(terrain_layout, 'terrain')
-
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
 
@@ -33,18 +30,30 @@ class Level:
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_d]:
-            self.world_tiles_offset += 8
+            self.world_shift = 8
 
         elif keys[pygame.K_a]:
-            self.world_tiles_offset += -8
+            self.world_shift = -8
+
+        else:
+            self.world_shift = 0
+
+        self.world_tiles_offset += self.world_shift
 
     def run(self):
         self.scroll_x()
-        for layer in self.tmxdata.visible_layers:
-            for x, y, tile in layer.tiles():
-                self.display_surface.blit(tile, (x * tile_size - self.world_tiles_offset, y * tile_size))
-
         self.player_sprite.update()
+
+        for layer in self.tmxdata.visible_layers:
+            if layer.name == 'terrain':
+                for x, y, tile in layer.tiles():
+                    if pygame.Rect(x * tile_size - self.world_tiles_offset, y * tile_size, tile_size, tile_size).colliderect(self.player_sprite.sprite.rect):
+                        self.player_sprite.sprite.vertical_collisions(y * tile_size)
+
+                    self.display_surface.blit(tile, (x * tile_size - self.world_tiles_offset, y * tile_size))
+
+            else:
+                for x, y, tile in layer.tiles():
+                    self.display_surface.blit(tile, (x * tile_size - self.world_tiles_offset, y * tile_size))
+
         self.player_sprite.draw(self.display_surface)
-        # self.terrain_sprites.update(self.world_shift)
-        # self.terrain_sprites.draw(self.display_surface)
