@@ -9,8 +9,10 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
 
         self.y_direction = 0
-        self.gravity = 0.8
+        self.gravity = 1.2
         self.jump_speed = -16
+
+        self.on_ground = True
 
     def apply_gravity(self):
         self.y_direction += self.gravity
@@ -22,7 +24,7 @@ class Player(pygame.sprite.Sprite):
     def get_input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and self.on_ground:
             self.jump()
 
         if keys[pygame.K_d]:
@@ -34,6 +36,7 @@ class Player(pygame.sprite.Sprite):
     def vertical_collisions(self, new_y):
         if self.y_direction > 0:
             self.rect.bottom = new_y
+            self.on_ground = True
 
         elif self.y_direction < 0:
             self.rect.top = new_y
@@ -43,3 +46,4 @@ class Player(pygame.sprite.Sprite):
     def update(self):
        self.get_input()
        self.apply_gravity()
+       self.on_ground = False
