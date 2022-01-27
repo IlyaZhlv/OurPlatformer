@@ -27,10 +27,10 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.on_ground:
             self.jump()
 
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] and not keys[pygame.K_a]:
             self.image = self.current_image
 
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] and not keys[pygame.K_d]:
             self.image = pygame.transform.flip(self.current_image, True, False)
 
     def vertical_collisions(self, new_y):

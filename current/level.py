@@ -14,6 +14,11 @@ class Level:
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
 
+        self.can_enter = False
+
+    def can_enter_check(self):
+        return self.can_enter
+
     def create_player(self):
         sprite = pygame.sprite.GroupSingle()
 
@@ -29,10 +34,10 @@ class Level:
     def scroll_x(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] and not keys[pygame.K_a]:
             self.world_shift = 8
 
-        elif keys[pygame.K_a]:
+        elif keys[pygame.K_a] and not keys[pygame.K_d]:
             self.world_shift = -8
 
         else:
@@ -51,6 +56,13 @@ class Level:
                         self.player_sprite.sprite.vertical_collisions(y * tile_size)
 
                     self.display_surface.blit(tile, (x * tile_size - self.world_tiles_offset, y * tile_size))
+
+            elif layer.name == 'enter':
+                for x, y, tile in layer.tiles():
+                    if tile_size * 14 <= x * tile_size - self.world_tiles_offset <= tile_size * 22:
+                        self.can_enter = True
+                    else:
+                        self.can_enter = False
 
             else:
                 for x, y, tile in layer.tiles():
