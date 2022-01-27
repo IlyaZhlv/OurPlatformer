@@ -4,7 +4,8 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, path_to_image):
         super().__init__()
-        self.image = pygame.image.load(path_to_image).convert_alpha()
+        self.current_image = pygame.image.load(path_to_image).convert_alpha()
+        self.image = self.current_image
         self.rect = self.image.get_rect(topleft=pos)
 
         self.y_direction = 0
@@ -23,6 +24,12 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_SPACE]:
             self.jump()
+
+        if keys[pygame.K_d]:
+            self.image = self.current_image
+
+        if keys[pygame.K_a]:
+            self.image = pygame.transform.flip(self.current_image, True, False)
 
     def vertical_collisions(self, new_y):
         if self.y_direction > 0:
