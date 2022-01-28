@@ -9,6 +9,7 @@ class Level:
     def __init__(self, display):
         self.display_surface = display
         self.world_shift = 0
+        self.speed = 8
         self.world_tiles_offset = 349 * tile_size
 
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
@@ -35,10 +36,10 @@ class Level:
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_d] and not keys[pygame.K_a]:
-            self.world_shift = 8
+            self.world_shift = self.speed
 
         elif keys[pygame.K_a] and not keys[pygame.K_d]:
-            self.world_shift = -8
+            self.world_shift = -self.speed
 
         else:
             self.world_shift = 0

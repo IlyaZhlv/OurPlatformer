@@ -9,17 +9,18 @@ class House:
     def __init__(self, display):
         self.display_surface = display
         self.player_shift = 0
+        self.speed = 5
         self.world_tiles_offset_x = -90
         self.world_tiles_offset_y = vertical_tile_number // 2 * tile_size - tile_size * 3
 
         self.tmxdata = pytmx.load_pygame('../map/home.tmx')
         self.player_sprite = self.create_player()
 
-        self.can_enter = False
+        self.can_out = False
         self.is_colliding = False
 
-    def can_enter_check(self):
-        return self.can_enter
+    def can_out_check(self):
+        return self.can_out
 
     def create_player(self):
         sprite = pygame.sprite.GroupSingle()
@@ -37,10 +38,10 @@ class House:
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_d] and not keys[pygame.K_a] and not self.is_colliding:
-            self.player_shift = 8
+            self.player_shift = self.speed
 
         elif keys[pygame.K_a] and not keys[pygame.K_d] and not self.is_colliding:
-            self.player_shift = -8
+            self.player_shift = -self.speed
 
         else:
             self.player_shift = 0
@@ -60,12 +61,16 @@ class House:
 
                     self.display_surface.blit(tile, (x * tile_size - self.world_tiles_offset_x, y * tile_size + self.world_tiles_offset_y))
 
-            # elif layer.name == 'enter':
-            #     for x, y, tile in layer.tiles():
-            #         if tile_size * 14 <= x * tile_size - self.world_tiles_offset_x <= tile_size * 22:
-            #             self.can_enter = True
-            #         else:
-            #             self.can_enter = False
+            elif layer.name == 'out':
+                for x, y, tile in layer.tiles():
+                    # if tile_size * 14 <= x * tile_size - self.world_tiles_offset_x <= tile_size * 22:
+                    #     self.can_enter = True
+                    # else:
+                    #     self.can_enter = False
+                    if self.player_sprite.sprite.rect.x - (x * tile_size - self.world_tiles_offset_x) < tile_size * 2:
+                        self.can_out = True
+                    else:
+                        self.can_out = False
 
             elif layer.name == 'walls':
                 for x, y, tile in layer.tiles():

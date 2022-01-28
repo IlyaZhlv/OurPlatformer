@@ -21,8 +21,10 @@ while True:
             if pygame.key.get_pressed()[pygame.K_ESCAPE]:
                 pygame.quit()
                 sys.exit()
-            if pygame.key.get_pressed()[pygame.K_e] and level.can_enter_check():
+            if pygame.key.get_pressed()[pygame.K_e] and level.can_enter_check() and location == 'street':
                 location = 'house'
+            elif pygame.key.get_pressed()[pygame.K_e] and house.can_out_check() and location == 'house':
+                location = 'street'
 
     if location == 'street':
         screen.fill((153, 217, 234))

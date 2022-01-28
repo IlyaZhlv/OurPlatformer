@@ -2,25 +2,22 @@ import os
 import sys
 
 import pygame
+pygame.init()
 player = None
 WIDTH = 1920
 HEIGHT = 1080
 STEP = 8
 FPS = 50
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
+
 STARTTEXT = pygame.USEREVENT + 1
 pygame.time.set_timer(STARTTEXT, 1000)
-
-floor_group = pygame.sprite.Group()
-all_sprites = pygame.sprite.Group()
-tiles_group = pygame.sprite.Group()
-player_group = pygame.sprite.Group()
-vrag_group = pygame.sprite.Group()
-wall_group = pygame.sprite.Group()
-
-pause_menu = {'restart': [147, 360, 196, 82], 'menu': [374, 360, 196, 82]}
+# тут должны быть наши тайлы
+sprite = pygame.sprite.GroupSingle()
+pause_menu = {'restart': [570, 610, 300, 300], 'menu': [1110, 623, 300, 300]}
 def terminate():
     pygame.quit()
     sys.exit()
@@ -42,6 +39,7 @@ def load_image(name, colorkey=None):
     return image
 
 def start_screen():
+    print("я снова с вами")
     scr = 0
     fon = load_image('fon.png')
     text = load_image('text.png')
@@ -56,25 +54,28 @@ def start_screen():
             if event.type == pygame.QUIT:
                 terminate()
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                import main
+                from level import Level
+                level = Level(screen)
                 run = False
+                break
             if event.type == STARTTEXT:
                 scr = abs(scr - 1)
         pygame.display.flip()
 
 def pause():
-    screen.fill(pygame.Color(0, 0, 0))
     all_sprites.draw(screen)
-    vrag_group.draw(screen)
-    player_group.draw(screen)
-    screen.blit(menu_images['pause_button'], (0, 0))
+    sprite.draw(screen)
+    sprite.draw(screen)
     screen.blit(menu_images['pause_menu'], (0, 0))
-    if pygame.sprite.spritecollideany(player, vrag_group) != None:
-        screen.fill(pygame.Color(0, 0, 0))
-        tiles_group.draw(screen)
-        vrag_group.draw(screen)
-        screen.blit(menu_images['pause_button'], (0, 0))
-        screen.blit(menu_images['pause_menu'], (0, 0))
-        screen.blit(menu_images['dead'], (0, 0))
+    #ecли смерть открывае вот это
+    # if ded == True:
+        # screen.fill(pygame.Color(0, 0, 0))
+        # sprite.draw(screen)
+        # sprite.draw(screen)
+        # screen.blit(menu_images['pause_button'], (0, 0))
+        # screen.blit(menu_images['pause_menu'], (0, 0))
+        # screen.blit(menu_images['dead'], (0, 0))
     pygame.display.flip()
     running = True
     while running:
@@ -86,16 +87,16 @@ def pause():
                 for i in pause_menu:
                     if pause_menu[i][0] < pos[0] < pause_menu[i][0] + pause_menu[i][2] and pause_menu[i][1] < pos[1] < pause_menu[i][1] + pause_menu[i][3]:
                         if i == 'restart':
-                            return 'res'
+
+                            print('restart')
                         elif i == 'menu':
-                            return 'men'
-                else:
-                    return 'go'
+                            start_screen()
+                            print('menu')
+                            break
+                    else:
+                        #продолжаем игру
+                        print('продолжаем')
 
-
-tile_images = {'wall': load_image('wall.png'), 'empty': load_image('floor.png'),
-               'yellow': load_image('yellow.png'), 'blue': load_image('blue.png'),
-               'paint': load_image('painted_floor.png')}
 menu_images = {'pause_button': load_image('pause.png'), 'pause_menu': load_image('pause_menu.png'),
                'dead': load_image('dead.png'), 'win': load_image('win.png')}
 player_image = load_image('player.png')
@@ -103,4 +104,3 @@ player_image = load_image('player.png')
 tile_width = tile_height = 64
 
 all_sprites = pygame.sprite.Group()
-pause()
