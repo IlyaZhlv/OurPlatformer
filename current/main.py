@@ -10,7 +10,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 level = Level(screen)
 house = House(screen)
 clock = pygame.time.Clock()
-location = 'house'
+location = 'street'
 
 while True:
     for event in pygame.event.get():
@@ -24,10 +24,11 @@ while True:
             if pygame.key.get_pressed()[pygame.K_e] and level.can_enter_check():
                 location = 'house'
 
-    screen.fill((153, 217, 234))
     if location == 'street':
+        screen.fill((153, 217, 234))
         level.run()
     elif location == 'house':
+        screen.fill((0, 0, 0))
         house.run()
 
     pygame.display.update()
