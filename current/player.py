@@ -1,16 +1,22 @@
-import pygame
+from pygame import *
 
 
-class Player(pygame.sprite.Sprite):
+class Player(sprite.Sprite):
     def __init__(self, pos, path_to_image):
         super().__init__()
-        self.current_image = pygame.image.load(path_to_image).convert_alpha()
+        self.current_image = image.load(path_to_image).convert_alpha()
         self.image = self.current_image
         self.rect = self.image.get_rect(topleft=pos)
 
         self.y_direction = 0
         self.gravity = 1.2
         self.jump_speed = -16
+
+        self.helpanim = 0
+        self.animation = [image.load(path).convert_alpha() for path in
+                ['../map/character/run/right.png', '../map/character/run/right2.png',
+                 '../map/character/run/left.png', '../map/character/run/left2.png',
+                 '../map/character/run/left.png', '../map/character/run/left2.png']]
 
         self.on_ground = True
 
@@ -22,16 +28,22 @@ class Player(pygame.sprite.Sprite):
         self.y_direction = self.jump_speed
 
     def get_input(self):
-        keys = pygame.key.get_pressed()
+        keys = key.get_pressed()
 
-        if keys[pygame.K_SPACE] and self.on_ground:
+        if keys[K_SPACE] and self.on_ground:
             self.jump()
 
-        if keys[pygame.K_d] and not keys[pygame.K_a]:
+        if keys[K_d]:
             self.image = self.current_image
+            self.current_image = self.animation[0]
+            self.current_image = self.animation[0 + self.helpanim // 5]
+            self.helpanim = (self.helpanim + 1) % 10
 
-        if keys[pygame.K_a] and not keys[pygame.K_d]:
-            self.image = pygame.transform.flip(self.current_image, True, False)
+        if keys[K_a]:
+            self.image = self.current_image
+            self.current_image = self.animation[2]
+            self.current_image = self.animation[2 + self.helpanim // 5]
+            self.helpanim = (self.helpanim + 1) % 10
 
     def vertical_collisions(self, new_y):
         if self.y_direction > 0:
