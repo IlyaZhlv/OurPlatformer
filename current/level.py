@@ -2,7 +2,7 @@ import pygame
 import pytmx
 
 from player import Player
-from zombies import Zombie1, Zombie2, Zombie3
+from zombies import Zombie1, Zombie2, Zombie3, Zombie4
 from tiles import Tile
 from settings import *
 
@@ -20,6 +20,7 @@ class Level:
         self.zombie1_sprites = self.create_zombies('zombies')
         self.zombie2_sprites = self.create_zombies('zombies1')
         self.zombie3_sprites = self.create_zombies('zombies2')
+        self.zombie4_sprites = self.create_zombies('zombies3')
 
         self.wall_sprites = self.create_walls()
 
@@ -45,6 +46,11 @@ class Level:
             elif layer.name == 'zombies2' and type == 'zombies2':
                 for x, y, tile in layer.tiles():
                     zombie = Zombie3((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie3')
+                    sprite.add(zombie)
+
+            elif layer.name == 'zombies3' and type == 'zombies3':
+                for x, y, tile in layer.tiles():
+                    zombie = Zombie4((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie4')
                     sprite.add(zombie)
 
         return sprite
@@ -87,7 +93,7 @@ class Level:
         self.world_tiles_offset += self.world_shift
 
     def check_walls_collisions(self):
-        for sprite in self.zombie1_sprites.sprites() + self.zombie2_sprites.sprites() + self.zombie3_sprites.sprites():
+        for sprite in self.zombie1_sprites.sprites() + self.zombie2_sprites.sprites() + self.zombie3_sprites.sprites() + self.zombie4_sprites.sprites():
             if pygame.sprite.spritecollide(sprite, self.wall_sprites, False):
                 sprite.reverse_speed()
 
@@ -126,7 +132,9 @@ class Level:
         self.zombie1_sprites.update(self.world_shift)
         self.zombie2_sprites.update(self.world_shift)
         self.zombie3_sprites.update(self.world_shift)
+        self.zombie4_sprites.update(self.world_shift)
         self.check_walls_collisions()
         self.zombie1_sprites.draw(self.display_surface)
         self.zombie2_sprites.draw(self.display_surface)
         self.zombie3_sprites.draw(self.display_surface)
+        self.zombie4_sprites.draw(self.display_surface)

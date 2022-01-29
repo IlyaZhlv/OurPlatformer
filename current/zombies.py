@@ -59,3 +59,10 @@ class Zombie3(Zombie):
         super().__init__(pos, path_to_folder)
 
         self.speed = choice([-1, 1]) * randint(3, 7)
+
+
+class Zombie4(Zombie):
+    def __init__(self, pos, path_to_folder):
+        super().__init__(pos, path_to_folder)
+
+        self.speed = choice([-1, 1]) * randint(1, 2)
