@@ -1,5 +1,7 @@
 import pygame
 
+from random import randint, choice
+
 from support import import_folder
 
 
@@ -15,7 +17,7 @@ class Zombie1(pygame.sprite.Sprite):
         self.y_direction = 0
         self.gravity = 1.2
         self.jump_speed = -16
-        self.speed = -3
+        self.speed = choice([-1, 1]) * randint(3, 5)
 
         self.on_ground = True
 
