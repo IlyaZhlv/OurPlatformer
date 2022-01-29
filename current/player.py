@@ -33,13 +33,13 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.on_ground:
             self.jump()
 
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] and not keys[pygame.K_a]:
             self.image = self.current_image
             self.current_image = self.animation[0]
             self.current_image = self.animation[0 + self.helpanim // 5]
             self.helpanim = (self.helpanim + 1) % 10
 
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] and not keys[pygame.K_d]:
             self.image = self.current_image
             self.current_image = self.animation[2]
             self.current_image = self.animation[2 + self.helpanim // 5]

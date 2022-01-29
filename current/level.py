@@ -2,6 +2,7 @@ import pygame
 import pytmx
 
 from player import Player
+from zombies import Zombie1
 from settings import *
 
 
@@ -15,10 +16,23 @@ class Level:
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
 
+        self.zombie1_spirtes = self.create_zombies()
+
         self.can_enter = False
 
     def can_enter_check(self):
         return self.can_enter
+
+    def create_zombies(self):
+        sprite = pygame.sprite.Group()
+
+        for layer in self.tmxdata.layers:
+            if layer.name == 'zombies':
+                for x, y, tile in layer.tiles():
+                    zombie = Zombie1((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie1')
+                    sprite.add(zombie)
+
+        return sprite
 
     def create_player(self):
         sprite = pygame.sprite.GroupSingle()
@@ -65,8 +79,16 @@ class Level:
                     else:
                         self.can_enter = False
 
+            # elif layer.name == 'zombies':
+            #     for x, y, tile in layer.tiles():
+            #         test_image = pygame.image.load('../map/zombies/zombi1.png').convert_alpha()
+            #         self.display_surface.blit(test_image, (x * tile_size - self.world_tiles_offset, y * tile_size))
+
             else:
                 for x, y, tile in layer.tiles():
                     self.display_surface.blit(tile, (x * tile_size - self.world_tiles_offset, y * tile_size))
 
         self.player_sprite.draw(self.display_surface)
+
+        self.zombie1_spirtes.update(self.world_shift)
+        self.zombie1_spirtes.draw(self.display_surface)
