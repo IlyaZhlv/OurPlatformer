@@ -4,8 +4,8 @@ import sys
 import pygame
 pygame.init()
 player = None
-WIDTH = 1920
-HEIGHT = 1080
+WIDTH = 1200
+HEIGHT = 960
 STEP = 8
 FPS = 50
 
@@ -94,7 +94,6 @@ def pause():
 
 menu_images = {'pause_menu': load_image('pause_menu.png'),
                'dead': load_image('dead.png')}
-player_image = load_image('player.png')
 
 tile_width = tile_height = 64
 
