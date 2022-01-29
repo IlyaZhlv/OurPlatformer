@@ -17,10 +17,10 @@ class Level:
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
 
-        self.zombie1_sprites = self.create_zombies('zombies')
-        self.zombie2_sprites = self.create_zombies('zombies1')
-        self.zombie3_sprites = self.create_zombies('zombies2')
-        self.zombie4_sprites = self.create_zombies('zombies3')
+        self.zombie1_sprites = self.create_zombies('zombies1')
+        self.zombie2_sprites = self.create_zombies('zombies2')
+        self.zombie3_sprites = self.create_zombies('zombies3')
+        self.zombie4_sprites = self.create_zombies('zombies4')
 
         self.wall_sprites = self.create_walls()
 
@@ -33,22 +33,22 @@ class Level:
         sprite = pygame.sprite.Group()
 
         for layer in self.tmxdata.layers:
-            if layer.name == 'zombies' and type == 'zombies':
+            if layer.name == 'zombies1' and type == 'zombies1':
                 for x, y, tile in layer.tiles():
                     zombie = Zombie1((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie1')
                     sprite.add(zombie)
 
-            elif layer.name == 'zombies1' and type == 'zombies1':
+            elif layer.name == 'zombies2' and type == 'zombies2':
                 for x, y, tile in layer.tiles():
                     zombie = Zombie2((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie2')
                     sprite.add(zombie)
 
-            elif layer.name == 'zombies2' and type == 'zombies2':
+            elif layer.name == 'zombies3' and type == 'zombies3':
                 for x, y, tile in layer.tiles():
                     zombie = Zombie3((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie3')
                     sprite.add(zombie)
 
-            elif layer.name == 'zombies3' and type == 'zombies3':
+            elif layer.name == 'zombies4' and type == 'zombies4':
                 for x, y, tile in layer.tiles():
                     zombie = Zombie4((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie4')
                     sprite.add(zombie)
