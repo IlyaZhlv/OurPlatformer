@@ -2,7 +2,7 @@ import pygame
 import pytmx
 
 from player import Player
-from zombies import Zombie1
+from zombies import Zombie1, Zombie2
 from tiles import Tile
 from settings import *
 
@@ -17,8 +17,9 @@ class Level:
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
 
-        self.zombie1_sprites = self.create_zombies()
-        
+        self.zombie1_sprites = self.create_zombies('zombies')
+        self.zombie2_sprites = self.create_zombies('zombies1')
+
         self.wall_sprites = self.create_walls()
 
         self.can_enter = False
@@ -26,13 +27,18 @@ class Level:
     def can_enter_check(self):
         return self.can_enter
 
-    def create_zombies(self):
+    def create_zombies(self, type):
         sprite = pygame.sprite.Group()
 
         for layer in self.tmxdata.layers:
-            if layer.name == 'zombies':
+            if layer.name == 'zombies' and type == 'zombies':
                 for x, y, tile in layer.tiles():
                     zombie = Zombie1((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie1')
+                    sprite.add(zombie)
+
+            elif layer.name == 'zombies1' and type == 'zombies1':
+                for x, y, tile in layer.tiles():
+                    zombie = Zombie2((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie2')
                     sprite.add(zombie)
 
         return sprite
@@ -75,7 +81,7 @@ class Level:
         self.world_tiles_offset += self.world_shift
 
     def check_walls_collisions(self):
-        for sprite in self.zombie1_sprites.sprites():
+        for sprite in self.zombie1_sprites.sprites() + self.zombie2_sprites.sprites():
             if pygame.sprite.spritecollide(sprite, self.wall_sprites, False):
                 sprite.reverse_speed()
 
@@ -112,5 +118,7 @@ class Level:
         self.wall_sprites.update(self.world_shift)
 
         self.zombie1_sprites.update(self.world_shift)
+        self.zombie2_sprites.update(self.world_shift)
         self.check_walls_collisions()
         self.zombie1_sprites.draw(self.display_surface)
+        self.zombie2_sprites.draw(self.display_surface)

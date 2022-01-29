@@ -5,7 +5,7 @@ from random import randint, choice
 from support import import_folder
 
 
-class Zombie1(pygame.sprite.Sprite):
+class Zombie(pygame.sprite.Sprite):
     def __init__(self, pos, path_to_folder):
         super().__init__()
         self.frames = import_folder(path_to_folder)
@@ -17,7 +17,6 @@ class Zombie1(pygame.sprite.Sprite):
         self.y_direction = 0
         self.gravity = 1.2
         self.jump_speed = -16
-        self.speed = choice([-1, 1]) * randint(3, 5)
 
         self.on_ground = True
 
@@ -39,3 +38,17 @@ class Zombie1(pygame.sprite.Sprite):
         self.rect.x += self.speed
 
         self.animation()
+
+
+class Zombie1(Zombie):
+    def __init__(self, pos, path_to_folder):
+        super().__init__(pos, path_to_folder)
+
+        self.speed = choice([-1, 1]) * randint(3, 5)
+
+
+class Zombie2(Zombie):
+    def __init__(self, pos, path_to_folder):
+        super().__init__(pos, path_to_folder)
+
+        self.speed = choice([-1, 1]) * randint(6, 8)
