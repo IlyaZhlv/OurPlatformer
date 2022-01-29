@@ -3,6 +3,7 @@ import pytmx
 
 from player import Player
 from zombies import Zombie1
+from tiles import Tile
 from settings import *
 
 
@@ -16,7 +17,9 @@ class Level:
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
 
-        self.zombie1_spirtes = self.create_zombies()
+        self.zombie1_sprites = self.create_zombies()
+        
+        self.wall_sprites = self.create_walls()
 
         self.can_enter = False
 
@@ -46,6 +49,17 @@ class Level:
 
         return sprite
 
+    def create_walls(self):
+        sprite = pygame.sprite.Group()
+
+        for layer in self.tmxdata.layers:
+            if layer.name == 'walls':
+                for x, y, tile in layer.tiles():
+                    wall = Tile(tile_size, x * tile_size - self.world_tiles_offset, y * tile_size)
+                    sprite.add(wall)
+
+        return sprite
+
     def scroll_x(self):
         keys = pygame.key.get_pressed()
 
@@ -59,6 +73,11 @@ class Level:
             self.world_shift = 0
 
         self.world_tiles_offset += self.world_shift
+
+    def check_walls_collisions(self):
+        for sprite in self.zombie1_sprites.sprites():
+            if pygame.sprite.spritecollide(sprite, self.wall_sprites, False):
+                sprite.reverse_speed()
 
     def run(self):
         self.scroll_x()
@@ -90,5 +109,8 @@ class Level:
 
         self.player_sprite.draw(self.display_surface)
 
-        self.zombie1_spirtes.update(self.world_shift)
-        self.zombie1_spirtes.draw(self.display_surface)
+        self.wall_sprites.update(self.world_shift)
+
+        self.zombie1_sprites.update(self.world_shift)
+        self.check_walls_collisions()
+        self.zombie1_sprites.draw(self.display_surface)

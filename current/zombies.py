@@ -15,16 +15,25 @@ class Zombie1(pygame.sprite.Sprite):
         self.y_direction = 0
         self.gravity = 1.2
         self.jump_speed = -16
+        self.speed = -3
 
         self.on_ground = True
+
+    def reverse_speed(self):
+        self.speed *= -1
 
     def animation(self):
         self.frame_index += 0.15
         if self.frame_index >= len(self.frames):
             self.frame_index = 0
-        self.image = self.frames[int(self.frame_index)]
+
+        if self.speed > 0:
+            self.image = self.frames[int(self.frame_index)]
+        elif self.speed < 0:
+            self.image = pygame.transform.flip(self.frames[int(self.frame_index)], True, False)
 
     def update(self, x_shift):
         self.rect.x -= x_shift
+        self.rect.x += self.speed
 
         self.animation()
