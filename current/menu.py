@@ -53,8 +53,9 @@ def start_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
+            if pygame.key.get_pressed()[pygame.K_ESCAPE]:
+                sys.exit()
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                import main
                 from level import Level
                 level = Level(screen)
                 run = False
@@ -70,11 +71,7 @@ def pause():
     screen.blit(menu_images['pause_menu'], (0, 0))
     #ecли смерть открывае вот это
     # if ded == True:
-        # screen.fill(pygame.Color(0, 0, 0))
         # sprite.draw(screen)
-        # sprite.draw(screen)
-        # screen.blit(menu_images['pause_button'], (0, 0))
-        # screen.blit(menu_images['pause_menu'], (0, 0))
         # screen.blit(menu_images['dead'], (0, 0))
     pygame.display.flip()
     running = True
@@ -87,18 +84,16 @@ def pause():
                 for i in pause_menu:
                     if pause_menu[i][0] < pos[0] < pause_menu[i][0] + pause_menu[i][2] and pause_menu[i][1] < pos[1] < pause_menu[i][1] + pause_menu[i][3]:
                         if i == 'restart':
+                            running = False
 
-                            print('restart')
                         elif i == 'menu':
+                            running = False
                             start_screen()
-                            print('menu')
-                            break
                     else:
-                        #продолжаем игру
-                        print('продолжаем')
+                        running = False
 
-menu_images = {'pause_button': load_image('pause.png'), 'pause_menu': load_image('pause_menu.png'),
-               'dead': load_image('dead.png'), 'win': load_image('win.png')}
+menu_images = {'pause_menu': load_image('pause_menu.png'),
+               'dead': load_image('dead.png')}
 player_image = load_image('player.png')
 
 tile_width = tile_height = 64
