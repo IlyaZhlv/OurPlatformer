@@ -14,6 +14,7 @@ class Level:
         self.speed = 8
         self.world_tiles_offset = 354 * tile_size
         self.zombie_count = 0
+        self.player_health = 100
 
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
@@ -103,11 +104,22 @@ class Level:
                 sprite.reverse_speed()
 
     def check_character_collisions(self):
-        for sprite_group in [self.zombie1_sprites, self.zombie2_sprites, self.zombie3_sprites, self.zombie4_sprites]:
-            if pygame.sprite.spritecollide(self.player_sprite.sprite, sprite_group, False):
-                print('Нанесен урон')
+        if pygame.sprite.spritecollide(self.player_sprite.sprite, self.zombie1_sprites, False):
+            self.player_health -= 1
+        if pygame.sprite.spritecollide(self.player_sprite.sprite, self.zombie2_sprites, False):
+            self.player_health -= 2
+        if pygame.sprite.spritecollide(self.player_sprite.sprite, self.zombie3_sprites, False):
+            self.player_health -= 5
+        if pygame.sprite.spritecollide(self.player_sprite.sprite, self.zombie4_sprites, False):
+            self.player_health -= 30
+
+    def check_situation(self):
+        if self.player_health <= 0:
+            print('Проиграли')
 
     def run(self):
+        print(self.player_health)
+        self.check_situation()
         self.scroll_x()
         self.player_sprite.update()
 
