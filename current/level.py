@@ -13,6 +13,7 @@ class Level:
         self.world_shift = 0
         self.speed = 8
         self.world_tiles_offset = 354 * tile_size
+        self.zombie_count = 0
 
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
@@ -37,21 +38,25 @@ class Level:
                 for x, y, tile in layer.tiles():
                     zombie = Zombie1((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie1')
                     sprite.add(zombie)
+                    self.zombie_count += 1
 
             elif layer.name == 'zombies2' and type == 'zombies2':
                 for x, y, tile in layer.tiles():
                     zombie = Zombie2((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie2')
                     sprite.add(zombie)
+                    self.zombie_count += 1
 
             elif layer.name == 'zombies3' and type == 'zombies3':
                 for x, y, tile in layer.tiles():
                     zombie = Zombie3((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie3')
                     sprite.add(zombie)
+                    self.zombie_count += 1
 
             elif layer.name == 'zombies4' and type == 'zombies4':
                 for x, y, tile in layer.tiles():
                     zombie = Zombie4((x * tile_size - self.world_tiles_offset, y * tile_size + 15), '../map/zombies/zombie4')
                     sprite.add(zombie)
+                    self.zombie_count += 1
 
         return sprite
 
@@ -97,6 +102,11 @@ class Level:
             if pygame.sprite.spritecollide(sprite, self.wall_sprites, False):
                 sprite.reverse_speed()
 
+    def check_character_collisions(self):
+        for sprite_group in [self.zombie1_sprites, self.zombie2_sprites, self.zombie3_sprites, self.zombie4_sprites]:
+            if pygame.sprite.spritecollide(self.player_sprite.sprite, sprite_group, False):
+                print('Нанесен урон')
+
     def run(self):
         self.scroll_x()
         self.player_sprite.update()
@@ -134,6 +144,7 @@ class Level:
         self.zombie3_sprites.update(self.world_shift)
         self.zombie4_sprites.update(self.world_shift)
         self.check_walls_collisions()
+        self.check_character_collisions()
         self.zombie1_sprites.draw(self.display_surface)
         self.zombie2_sprites.draw(self.display_surface)
         self.zombie3_sprites.draw(self.display_surface)
