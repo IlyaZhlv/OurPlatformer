@@ -12,7 +12,7 @@ class Level:
         self.display_surface = display
         self.world_shift = 0
         self.speed = 8
-        self.world_tiles_offset = 349 * tile_size
+        self.world_tiles_offset = 354 * tile_size
 
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
