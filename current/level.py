@@ -6,7 +6,7 @@ import pytmx
 from player import Player
 from zombies import Zombie1, Zombie2, Zombie3, Zombie4
 from tiles import Tile
-from display import Health
+from display import Health, Task
 from settings import *
 
 
@@ -32,6 +32,7 @@ class Level:
         self.can_enter = False
 
         self.health = Health(self.display_surface)
+        self.task = Task(self.display_surface)
 
     def can_enter_check(self):
         return self.can_enter
@@ -123,8 +124,13 @@ class Level:
             pygame.quit()
             sys.exit()
 
+    def get_zombies_count(self):
+        return (len(self.zombie1_sprites.sprites()), len(self.zombie2_sprites.sprites()),
+                len(self.zombie3_sprites.sprites()), len(self.zombie4_sprites.sprites()))
+
     def run(self):
         self.health.show_health(self.player_health)
+        self.task.show_task(*self.get_zombies_count())
         self.check_situation()
         self.scroll_x()
         self.player_sprite.update()
@@ -143,11 +149,6 @@ class Level:
                         self.can_enter = True
                     else:
                         self.can_enter = False
-
-            # elif layer.name == 'zombies':
-            #     for x, y, tile in layer.tiles():
-            #         test_image = pygame.image.load('../map/zombies/zombi1.png').convert_alpha()
-            #         self.display_surface.blit(test_image, (x * tile_size - self.world_tiles_offset, y * tile_size))
 
             else:
                 for x, y, tile in layer.tiles():
