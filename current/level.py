@@ -1,9 +1,12 @@
+import sys
+
 import pygame
 import pytmx
 
 from player import Player
 from zombies import Zombie1, Zombie2, Zombie3, Zombie4
 from tiles import Tile
+from display import Health
 from settings import *
 
 
@@ -27,6 +30,8 @@ class Level:
         self.wall_sprites = self.create_walls()
 
         self.can_enter = False
+
+        self.health = Health(self.display_surface)
 
     def can_enter_check(self):
         return self.can_enter
@@ -115,10 +120,11 @@ class Level:
 
     def check_situation(self):
         if self.player_health <= 0:
-            print('Проиграли')
+            pygame.quit()
+            sys.exit()
 
     def run(self):
-        print(self.player_health)
+        self.health.show_health(self.player_health)
         self.check_situation()
         self.scroll_x()
         self.player_sprite.update()
