@@ -2,11 +2,16 @@ import pygame
 
 from settings import screen_width
 
-class Health:
+
+class Interface:
     def __init__(self, surface):
         self.display_surface = surface
 
         self.font = pygame.font.Font('../map/ARCADEPI.TTF', 40)
+
+class Health(Interface):
+    def __init__(self, surface):
+        super().__init__(surface)
 
     def show_health(self, amount):
         amount_surface = self.font.render(str(amount), False, 'red')
@@ -14,11 +19,9 @@ class Health:
         self.display_surface.blit(amount_surface, amount_rect)
 
 
-class Task:
+class Task(Interface):
     def __init__(self, surface):
-        self.display_surface = surface
-
-        self.font = pygame.font.Font('../map/ARCADEPI.TTF', 40)
+        super().__init__(surface)
 
     def show_task(self, zombie1_count, zombie2_count, zombie3_count, zombie4_count):
         color = (34, 177, 76)
@@ -48,3 +51,13 @@ class Task:
         self.display_surface.blit(zombie2_surface, zombie2_surface.get_rect(topleft=(screen_width - 140, 85)))
         self.display_surface.blit(zombie3_surface, zombie3_surface.get_rect(topleft=(screen_width - 140, 145)))
         self.display_surface.blit(zombie4_surface, zombie4_surface.get_rect(topleft=(screen_width - 140, 205)))
+
+
+class Ban(Interface):
+    def __init__(self, surface):
+        super().__init__(surface)
+
+    def show_ban(self, ban_count):
+        ban_count_surface = self.font.render(str(ban_count), False, 'black')
+        ban_count_rect = ban_count_surface.get_rect(topleft=(screen_width // 2 - 50, 30))
+        self.display_surface.blit(ban_count_surface, ban_count_rect)

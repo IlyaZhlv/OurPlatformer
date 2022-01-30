@@ -6,7 +6,7 @@ import pytmx
 from player import Player
 from zombies import Zombie1, Zombie2, Zombie3, Zombie4
 from tiles import Tile
-from display import Health, Task
+from display import Health, Task, Ban
 from settings import *
 
 
@@ -18,6 +18,7 @@ class Level:
         self.world_tiles_offset = 354 * tile_size
         self.zombie_count = 0
         self.player_health = 100
+        self.ban_count = 0
 
         self.tmxdata = pytmx.load_pygame('../map/mainmap.tmx')
         self.player_sprite = self.create_player()
@@ -33,6 +34,7 @@ class Level:
 
         self.health = Health(self.display_surface)
         self.task = Task(self.display_surface)
+        self.ban = Ban(self.display_surface)
 
     def can_enter_check(self):
         return self.can_enter
@@ -90,8 +92,12 @@ class Level:
 
         return sprite
 
-    def scroll_x(self):
+    def get_input(self):
         keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_r] and self.ban_count == 0:
+            self.ban_count = 250
+            self.kill_zombie()
 
         if keys[pygame.K_d] and not keys[pygame.K_a]:
             self.world_shift = self.speed
@@ -103,6 +109,9 @@ class Level:
             self.world_shift = 0
 
         self.world_tiles_offset += self.world_shift
+
+    def kill_zombie(self):
+        pass
 
     def check_walls_collisions(self):
         for sprite in self.zombie1_sprites.sprites() + self.zombie2_sprites.sprites() + self.zombie3_sprites.sprites() + self.zombie4_sprites.sprites():
@@ -120,6 +129,11 @@ class Level:
             self.player_health -= 30
 
     def check_situation(self):
+        self.ban_count -= 1
+
+        if self.ban_count < 0:
+            self.ban_count = 0
+
         if self.player_health <= 0:
             pygame.quit()
             sys.exit()
@@ -131,8 +145,12 @@ class Level:
     def run(self):
         self.health.show_health(self.player_health)
         self.task.show_task(*self.get_zombies_count())
+
+        if self.ban_count:
+            self.ban.show_ban(self.ban_count)
+
         self.check_situation()
-        self.scroll_x()
+        self.get_input()
         self.player_sprite.update()
 
         for layer in self.tmxdata.visible_layers:
