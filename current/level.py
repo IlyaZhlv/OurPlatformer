@@ -99,10 +99,10 @@ class Level:
             self.ban_count = 190
             self.kill_zombie()
 
-        if keys[pygame.K_d] and not keys[pygame.K_a]:
+        if keys[pygame.K_d] and not keys[pygame.K_a] and self.world_tiles_offset < 19168:
             self.world_shift = self.speed
 
-        elif keys[pygame.K_a] and not keys[pygame.K_d]:
+        elif keys[pygame.K_a] and not keys[pygame.K_d] and self.world_tiles_offset > -416:
             self.world_shift = -self.speed
 
         else:
