@@ -96,7 +96,7 @@ class Level:
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_r] and self.ban_count == 0:
-            self.ban_count = 250
+            self.ban_count = 190
             self.kill_zombie()
 
         if keys[pygame.K_d] and not keys[pygame.K_a]:
