@@ -111,7 +111,9 @@ class Level:
         self.world_tiles_offset += self.world_shift
 
     def kill_zombie(self):
-        pass
+        for sprite in self.zombie1_sprites.sprites() + self.zombie2_sprites.sprites() + self.zombie3_sprites.sprites() + self.zombie4_sprites.sprites():
+            if abs(sprite.rect.centerx - self.player_sprite.sprite.rect.centerx) < 85:
+                sprite.kill()
 
     def check_walls_collisions(self):
         for sprite in self.zombie1_sprites.sprites() + self.zombie2_sprites.sprites() + self.zombie3_sprites.sprites() + self.zombie4_sprites.sprites():
