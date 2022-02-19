@@ -8,7 +8,7 @@ from zombies import Zombie1, Zombie2, Zombie3, Zombie4
 from tiles import Tile
 from display import Health, Task, Ban
 from settings import *
-
+from menu import pause
 
 class Level:
     def __init__(self, display):
@@ -115,6 +115,7 @@ class Level:
             if abs(sprite.rect.centerx - self.player_sprite.sprite.rect.centerx) < 85:
                 sprite.kill()
 
+
     def check_walls_collisions(self):
         for sprite in self.zombie1_sprites.sprites() + self.zombie2_sprites.sprites() + self.zombie3_sprites.sprites() + self.zombie4_sprites.sprites():
             if pygame.sprite.spritecollide(sprite, self.wall_sprites, False):
@@ -132,14 +133,13 @@ class Level:
 
     def check_situation(self):
         self.ban_count -= 1
-
         if self.ban_count < 0:
             self.ban_count = 0
-
         if self.player_health <= 0:
-            pygame.quit()
-            sys.exit()
-
+            ded = True
+            pause(ded)
+            Level.__init__(self, self.display_surface)
+            self.player_health = 100
     def get_zombies_count(self):
         return (len(self.zombie1_sprites.sprites()), len(self.zombie2_sprites.sprites()),
                 len(self.zombie3_sprites.sprites()), len(self.zombie4_sprites.sprites()))
