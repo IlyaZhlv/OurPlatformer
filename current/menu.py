@@ -1,6 +1,6 @@
+
 import os
 import sys
-
 import pygame
 pygame.init()
 player = None
@@ -64,15 +64,18 @@ def start_screen():
                 scr = abs(scr - 1)
         pygame.display.flip()
 
-def pause():
+def pause(ded):
     all_sprites.draw(screen)
     sprite.draw(screen)
     sprite.draw(screen)
     screen.blit(menu_images['pause_menu'], (0, 0))
-    #ecли смерть открывае вот это
-    # if ded == True:
-        # sprite.draw(screen)
-        # screen.blit(menu_images['dead'], (0, 0))
+    if ded == True:
+        sprite.draw(screen)
+        screen.blit(menu_images['dead'], (0, 0))
+    else:
+        screen.blit(menu_images['pause_menu'], (0, 0))
+
+
     pygame.display.flip()
     running = True
     while running:
@@ -90,6 +93,9 @@ def pause():
                             running = False
                             start_screen()
                     else:
+                        from level import Level
+                        level = Level(screen)
+                        level.run()
                         running = False
 
 menu_images = {'pause_menu': load_image('pause_menu.png'),
