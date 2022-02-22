@@ -24,7 +24,8 @@ while True:
             sys.exit()
         if event.type == pygame.KEYDOWN:
             if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                pause()
+                ded = False
+                pause(ded)
             if pygame.key.get_pressed()[pygame.K_e] and level.can_enter_check() and location == 'street':
                 location = 'house'
             elif pygame.key.get_pressed()[pygame.K_e] and house.can_out_check() and location == 'house':
